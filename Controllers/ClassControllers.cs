@@ -17,5 +17,20 @@ namespace schoolManagement.Controllers
         {
             return classObj.getAllClass();
         }
+        [HttpPut("id")]
+        public bool updateClass(int id, ClassR c)
+        {
+            return classObj.updateClass(id, c);
+        }
+        [HttpDelete("id")]
+        public bool deleteClass(int id)
+        {
+            return classObj.deleteClass(id);
+        }
+        [HttpGet("schoolId")]
+        public ActionResult<List<ClassR>> getClassesofSchool(int schoolId)
+        {
+            return classObj.getClassOfSchool(schoolId);
+        }
     }
 }

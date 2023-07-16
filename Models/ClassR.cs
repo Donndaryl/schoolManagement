@@ -78,5 +78,74 @@ namespace schoolManagement.Models
             }
             return classR;
         }
+
+        public bool updateClass(int id,ClassR c)
+        {
+            using (var connection = CreateConnection())
+            {
+                connection.Open();
+                var query = "update Class set name = @name,schoolId = @schoolId where id = " + id;
+                using (var command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@name", c.Name);
+                    command.Parameters.AddWithValue("@schoolId", c.SchoolId);
+                    if (command.ExecuteNonQuery() > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                }
+            }
+        }
+
+        public bool deleteClass(int id)
+        {
+            using (var connection = CreateConnection())
+            {
+                connection.Open();
+                var query = "delete from Class where id = " + id;
+                using (var command = new SQLiteCommand(query, connection))
+                {
+                    
+                    if (command.ExecuteNonQuery() > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                }
+            }
+        }
+
+        public List<ClassR> getClassOfSchool(int schoolId)
+        {
+
+            var classR = new List<ClassR>();
+            using (var connection = CreateConnection())
+            {
+                connection.Open();
+                var query = "SELECT * FROM Class where schoolId = "+schoolId;
+                using (var command = new SQLiteCommand(query, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            classR.Add(createdClass(reader));
+
+                        }
+                    }
+                }
+
+            }
+            return classR;
+        }
     }
 }

@@ -132,5 +132,75 @@ namespace schoolManagement.Models
 
             }
         }
+        public List<School> getAllSchoolById(int id)
+        {
+            var school = new List<School>();
+            using (var connection = CreateConnection())
+            {
+                connection.Open();
+                var query = "SELECT * FROM School where id="+id;
+                using (var command = new SQLiteCommand(query, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            school.Add(createSchool(reader));
+
+                        }
+                    }
+                }
+
+            }
+            return school;
+        }
+
+        public bool updateSchool(School s,int id)
+        {
+            using (var connection = CreateConnection())
+            {
+                connection.Open();
+                var query = "update School set name = @name,adress = @adress,city = @city,zipCode = @zipCode,country = @country where id = "+id;
+                using (var command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@name", s.Name);
+                    command.Parameters.AddWithValue("@adress", s.Adress);
+                    command.Parameters.AddWithValue("@city", s.City);
+                    command.Parameters.AddWithValue("@zipCode", s.ZipCode);
+                    command.Parameters.AddWithValue("@country", s.Country);
+                    if (command.ExecuteNonQuery() > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                }
+
+
+            }
+        }
+
+        public bool deleteSchool(int id)
+        {
+            using (var connection = CreateConnection())
+            {
+                connection.Open();
+                var query = "delete from school where id = "+id;
+                using (var command = new SQLiteCommand(query, connection))
+                {
+                    if (command.ExecuteNonQuery() > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
     }
 }
